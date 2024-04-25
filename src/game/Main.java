@@ -58,6 +58,30 @@ public class Main {
     public static final String WITHOUT_PLAYERS = "Without players.";
     public static final String PLAYERS_LIST = " players:";
     public static final String PLAYER_IN_POSITION = "player in position";
+    public static final String INVALID_PLAYER_COLOR = "Non-existent player type.";
+    public static final String INVALID_BUNKER_NAME = "Non-existent bunker.";
+    public static final String WRONG_TEAM_BUNKER = "Bunker illegally invaded.";
+    public static final String BUNKER_OCCUPIED = "Bunker not free.";
+    public static final String NOT_ENOUGH_COINS = "Insufficient coins for recruitment.";
+    public static final String PLAYER_CREATED = "player created";
+    public static final String UNEXPECTED_ERROR = "Unexpected error";
+    public static final String NORTH = "north";
+    public static final String SOUTH = "south";
+    public static final String EAST = "east";
+    public static final String WEST = "west";
+    public static final String INVALID_POSITION = "Invalid position.";
+    public static final String INVALID_DIRECTION = "Invalid direction.";
+    public static final String NO_PLAYER = "No player in that position.";
+    public static final String INVALID_MOVE = "Invalid move.";
+    public static final String POSITION_OCCUPIED = "Position occupied.";
+    public static final String OFF_THE_MAP = "Trying to move off the map.";
+    public static final String BUNKER_SEIZED = "Bunker seized.";
+    public static final String WON_FIGHT = "Won the fight.";
+    public static final String PLAYER_ELIMINATED = "Player eliminated.";
+    public static final String WON_AND_SEIZED = "Won the fight and bunker seized.";
+    public static final String PLAYER_NOT_FROM_TEAM = "Unable to move player from the enemy team.";
+    public static final String WINNER_IS = "Winner is";
+    public static final String PLAYERS_ELIMINATED = "All players eliminated.";
     /**
      * Main method. Invokes the command interpreter
      * @param args command-line arguments (not used in this program)
@@ -338,13 +362,13 @@ public class Main {
         String bunkerName = commandArgs[1];
         PlayerColor color = PlayerColor.fromName(playerType);
         switch (game.createPlayer(color, bunkerName)) {
-            case INVALID_PLAYER_COLOR -> System.out.println("Non-existent player type.");
-            case INVALID_BUNKER_NAME -> System.out.println("Non-existent bunker.");
-            case WRONG_TEAM_BUNKER -> System.out.println("Bunker illegally invaded.");
-            case BUNKER_OCCUPIED -> System.out.println("Bunker not free.");
-            case NOT_ENOUGH_COINS -> System.out.println("Insufficient coins for recruitment.");
-            case PLAYER_CREATED -> System.out.printf("%s player created in %s\n", playerType, bunkerName);
-            default -> System.out.println("Unexpected error");
+            case INVALID_PLAYER_COLOR -> System.out.println(INVALID_PLAYER_COLOR);
+            case INVALID_BUNKER_NAME -> System.out.println(INVALID_BUNKER_NAME);
+            case WRONG_TEAM_BUNKER -> System.out.println(WRONG_TEAM_BUNKER);
+            case BUNKER_OCCUPIED -> System.out.println(BUNKER_OCCUPIED);
+            case NOT_ENOUGH_COINS -> System.out.println(NOT_ENOUGH_COINS);
+            case PLAYER_CREATED -> System.out.printf("%s %s in %s\n", playerType, PLAYER_CREATED, bunkerName);
+            default -> System.out.println(UNEXPECTED_ERROR);
         }
     }
 
@@ -354,25 +378,19 @@ public class Main {
      */
     private static void move(Game game, String args) {
         if (game == null) {
-            System.out.println("Invalid command.");
+            System.out.println(INVALID_COMMAND);
             return;
         }
-        int x, y;
         Array<Direction> dirs = new ArrayClass<>();
         String[] commandArgs = args.split(" ");
-        try {
-            x = Integer.parseInt(commandArgs[0]);
-            y = Integer.parseInt(commandArgs[1]);
-        } catch(NumberFormatException e){
-            System.out.println("ERROR: THE ARGUMENTS MUST BE NUMERIC!");
-            return;
-        }
+        int x = Integer.parseInt(commandArgs[0]);
+        int y = Integer.parseInt(commandArgs[1]);
         for (int i = 2; i<commandArgs.length; i++){
             switch(commandArgs[i]){
-                case "north" -> dirs.insertLast(Direction.NORTH);
-                case "south" -> dirs.insertLast(Direction.SOUTH);
-                case "west" -> dirs.insertLast(Direction.WEST);
-                case "east" -> dirs.insertLast(Direction.EAST);
+                case NORTH -> dirs.insertLast(Direction.NORTH);
+                case SOUTH -> dirs.insertLast(Direction.SOUTH);
+                case WEST -> dirs.insertLast(Direction.WEST);
+                case EAST -> dirs.insertLast(Direction.EAST);
                 default -> dirs.insertLast(Direction.INVALID);
             }
         }
@@ -381,23 +399,23 @@ public class Main {
         while (moveIterator.hasNext()) {
             Move move = moveIterator.next();
             switch (move.getEvent()) {
-                case INVALID_POSITION -> System.out.println("Invalid position.");
-                case INVALID_DIRECTION -> System.out.println("Invalid direction.");
-                case NO_PLAYER -> System.out.println("No player in that position.");
-                case INVALID_MOVE -> System.out.println("Invalid move.");
-                case POSITION_OCCUPIED -> System.out.println("Position occupied.");
-                case OFF_THE_MAP -> System.out.println("Trying to move off the map.");
-                case BUNKER_SEIZED -> System.out.println("Bunker seized.");
-                case WON_FIGHT -> System.out.println("Won the fight.");
-                case PLAYER_ELIMINATED -> System.out.println("Player eliminated.");
-                case WON_AND_SEIZED -> System.out.println("Won the fight and bunker seized.");
-                case PLAYER_NOT_FROM_TEAM -> System.out.println("Unable to move player from the enemy team.");
-                case MOVE_SUCCESS -> System.out.printf("%s player in position (%d, %d)\n", move.color.getName(), move.x, move.y);
+                case INVALID_POSITION -> System.out.println(INVALID_POSITION);
+                case INVALID_DIRECTION -> System.out.println(INVALID_DIRECTION);
+                case NO_PLAYER -> System.out.println(NO_PLAYER);
+                case INVALID_MOVE -> System.out.println(INVALID_MOVE);
+                case POSITION_OCCUPIED -> System.out.println(POSITION_OCCUPIED);
+                case OFF_THE_MAP -> System.out.println(OFF_THE_MAP);
+                case BUNKER_SEIZED -> System.out.println(BUNKER_SEIZED);
+                case WON_FIGHT -> System.out.println(WON_FIGHT);
+                case PLAYER_ELIMINATED -> System.out.println(PLAYER_ELIMINATED);
+                case WON_AND_SEIZED -> System.out.println(WON_AND_SEIZED);
+                case PLAYER_NOT_FROM_TEAM -> System.out.println(PLAYER_NOT_FROM_TEAM);
+                case MOVE_SUCCESS -> System.out.printf("%s %s (%d, %d)\n", move.color.getName(), PLAYER_IN_POSITION, move.x, move.y);
                 case GAME_OVER -> {
-                    System.out.printf("Winner is %s.\n", game.getWinner().getName());
+                    System.out.printf("%s %s.\n", WINNER_IS, game.getWinner().getName());
                     game = null;
                 }
-                default -> System.out.println("Unexpected error.");
+                default -> System.out.println(UNEXPECTED_ERROR);
             }
         }
     }
@@ -407,25 +425,25 @@ public class Main {
      */
     private static void attack(Game game) {
         if (game == null) {
-            System.out.println("Invalid command.");
+            System.out.println(INVALID_COMMAND);
             return;
         }
         String attackerTeam = game.getCurrentTeam().getName();
 
         switch (game.attack()){
             case TEAM_ELIM_AND_GAME_OVER -> {
-                System.out.println("All players eliminated.");
-                System.out.printf("Winner is %s.\n", game.getWinner().getName());
+                System.out.println(PLAYERS_ELIMINATED);
+                System.out.printf("%s %s.\n", WINNER_IS, game.getWinner().getName());
                 game = null;
             }
             case GAME_OVER -> {
                 if (game.getWinner().getName().equals(attackerTeam)) map(attackerTeam);
-                System.out.printf("Winner is %s.\n", game.getWinner().getName());
+                System.out.printf("%s %s.\n", WINNER_IS, game.getWinner().getName());
                 game = null;
             }
-            case TEAM_ELIMINATED -> System.out.println("All players eliminated.");
+            case TEAM_ELIMINATED -> System.out.println(PLAYERS_ELIMINATED);
             case ATTACK_SUCCESS -> map(attackerTeam);
-            default -> System.out.println("Unexpected error.");
+            default -> System.out.println(UNEXPECTED_ERROR);
         }
     }
 }
