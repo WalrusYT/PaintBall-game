@@ -112,7 +112,7 @@ public class ArrayClass<E> implements Array<E> {
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public SizedIterator<E> iterator() {
         return new ArrayIteratorClass<E>(elems, counter);
     }
 

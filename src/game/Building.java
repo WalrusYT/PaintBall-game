@@ -1,25 +1,22 @@
 package game;
 
+import game.players.Player;
 /**
  * Interface representing a Building
  */
-public interface Building {
+public interface Building extends Entity {
     /**
      * Executes the instructions that happens in the game at the end of the turn
      */
     void endTurn();
 
-    /**
-     * Returns the name of the bunker
-     * @return the name of the bunker
-     */
-    String getName();
+    CreateStatus createPlayer(Player.PlayerColor color);
 
-    /**
-     * Sets the name of the bunker
-     * @param name the name of the bunker
-     */
-    void setName(String name);
+    String name();
 
+    int treasury();
 
+    enum CreateStatus {
+        OK, NOT_ENOUGH_MONEY, OCCUPIED
+    }
 }

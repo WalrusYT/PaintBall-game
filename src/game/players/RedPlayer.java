@@ -1,31 +1,45 @@
 package game.players;
 
 import game.data_structures.*;
-import game.PaintballField;
+import game.Field;
 
 public class RedPlayer extends Player {
-    public RedPlayer(int x, int y, String team){
-        super(x, y, team);
+
+    public RedPlayer() {}
+
+    @Override
+    public ActionStatus attack() {
+        int x = fieldLocation.getX(), y = fieldLocation().getY();
+        int attackWidth = field.width() - x + 1, attackHeight = field.height() - y + 1;
+        for (int i = 1; i < attackWidth * attackHeight; i++) {
+            Field.Cell cellToAttack = field.cellAt(x + i % attackWidth, y + i / attackWidth);
+            if (attackCell(cellToAttack) == ActionStatus.PLAYER_ELIMINATED) return ActionStatus.PLAYER_ELIMINATED;
+        }
+        return ActionStatus.SURVIVED;
     }
 
     @Override
-    public Iterator<PaintballField.Cell> attack(PaintballField field) {
-        return new Iterator<>() {
-            int i = 0;
-            final int attackWidth = field.width() - x + 1;
-            final int attackHeight = field.height() - y + 1;
-
-            public boolean hasNext() { return i < attackWidth * attackHeight - 1; }
-
-            public PaintballField.Cell next() {
-                i++;
-                return field.getCell(x + i % attackWidth, y + i / attackWidth);
-            }
-        };
+    public Iterator<Action> move(Array<Direction>  dirs) {
+        Array<Action> actions = new ArrayClass<>();
+        if (dirs.size() < 1 || dirs.size() > 3) {
+            actions.insertLast(new Action(ActionStatus.INVALID_MOVE));
+            return actions.iterator();
+        }
+        for (int i = 0; i < dirs.size(); i++) {
+            Action action = moveDefault(dirs.get(i));
+            actions.insertLast(action);
+            if (action.getStatus() == ActionStatus.PLAYER_ELIMINATED) break;
+        }
+        return actions.iterator();
     }
 
     @Override
-    public PlayerColor getColor() {
+    public PlayerColor color() {
         return PlayerColor.RED;
+    }
+
+    @Override
+    public int cost() {
+        return 4;
     }
 }

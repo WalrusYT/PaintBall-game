@@ -76,5 +76,5 @@ public interface Array<E> {
      * Returns an iterator over the elements in the array.
      * @return an iterator
      */
-    Iterator<E> iterator();
+    SizedIterator<E> iterator();
 }

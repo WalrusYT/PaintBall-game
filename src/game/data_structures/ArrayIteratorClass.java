@@ -4,7 +4,7 @@ package game.data_structures;
  * This class implements an iterator an over an array
  * @param <E> the type of elements in the array
  */
-public class ArrayIteratorClass<E> implements Iterator<E> {
+public class ArrayIteratorClass<E> implements SizedIterator<E> {
 
     /**
      * Array of elements to iterate over
@@ -40,5 +40,10 @@ public class ArrayIteratorClass<E> implements Iterator<E> {
     @Override
     public E next() {
         return elems[current++];
+    }
+
+    @Override
+    public int size() {
+        return counter;
     }
 }
