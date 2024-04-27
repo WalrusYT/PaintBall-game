@@ -137,7 +137,6 @@ public class Main {
      * @param args arguments of the command (width, height, number of teams, number of bunkers)
      */
     private static Game newGame(Scanner in, String args) {
-        // game 10 10 5 5
         String[] commandArgs = args.split(" ");
         if (commandArgs.length < 4){
             System.out.println(NOT_ENOUGH_ARGS);
@@ -156,80 +155,33 @@ public class Main {
             System.out.println(NOT_ENOUGH_TEAMS);
             return null;
         }
-
-        Field field = new PaintballField(width, height);
+        Game game = new PaintballGame(width, height);
         System.out.println(bunkerNumber + BUNKERS_LIST);
-        Array<Building> bunkers = new ArrayClass<>();
-        bunkerLoop:
         for (int i = 0; i < bunkerNumber; i++) { 
             String[] input = in.nextLine().split(" ", 4);
             int x = Integer.parseInt(input[0]);
             int y = Integer.parseInt(input[1]);
             int treasury = Integer.parseInt(input[2]);
             String name = input[3];
-
-            if (x <= 0 || x > width || y <= 0 || y > height || treasury <= 0) {
-                System.out.println(BUNKER_NOT_CREATED);
-                continue;
-            }
-            if (field.cellAt(x, y).hasBuilding()){
-                System.out.println(BUNKER_NOT_CREATED);
-                continue;
-            }
-
-            Iterator<Building> iterator = bunkers.iterator();
-            while (iterator.hasNext()){
-                Building bunker = iterator.next();
-                if (bunker.name().equals(name)) {
-                    System.out.println(BUNKER_NOT_CREATED);
-                    continue bunkerLoop;
-                }
-            }
-            bunkers.insertLast(new Bunker(field, null, name, x, y, treasury));
+            GameStatus status = game.addBuilding(x, y, treasury, name);
+            if (status == GameStatus.BUNKER_NOT_CREATED) System.out.println(BUNKER_NOT_CREATED);
         }
-
         System.out.println(teamsNumber + TEAMS_LIST);
-        Array<Team> teams = new ArrayClass<>();
-        teamLoop:
         for (int i = 0; i < teamsNumber; i++) {
             String[] input = in.nextLine().split(" ", 2);
             if (input.length < 2) {
                 System.out.println(TEAM_NOT_CREATED);
                 continue;
             }
-
             String teamName = input[0], bunkerName = input[1];
-            boolean bunkerExists = false;
-            for (int j = 0; j < teams.size(); j++) {
-                if (teams.get(j).name().equals(teamName)) {
-                    System.out.println(TEAM_NOT_CREATED);
-                    continue teamLoop;
-                }
-            }
-
-            for (int j = 0; j < bunkers.size(); j++) {
-                Building bunker = bunkers.get(j);
-                if (bunker.team() != null) continue;
-                if (bunker.name().equals(bunkerName)) {
-                    Team team = new PaintballTeam(teamName);
-                    team.addBuilding(bunker);
-                    teams.insertLast(team);
-                    bunkerExists = true;
-                    break;
-                }
-            }
-
-
-            if (!bunkerExists) {
-                System.out.println(TEAM_NOT_CREATED);
-            }
+            GameStatus status = game.addTeam(teamName, bunkerName);
+            if (status == GameStatus.TEAM_NOT_CREATED) System.out.println(TEAM_NOT_CREATED);
         }
-
-        if (teams.size() < 2){
+        if (game.teams().size() < 2){
             System.out.println(NOT_ENOUGH_TEAMS);
             return null;
         }
-        return new PaintballGame(field, teams, bunkers);
+        return game;
     }
 
     /**
@@ -244,7 +196,6 @@ public class Main {
         System.out.println(game.width() + " " + game.height());
         SizedIterator<Building> bunkers = game.buildings();
         int bunkersNumber = bunkers.size();
-        
         System.out.println(bunkersNumber + BUNKERS_LIST);
         for (int i = 0; i < bunkersNumber; i++) {
             Building bunker = bunkers.next();
@@ -309,9 +260,10 @@ public class Main {
         }
 
         SizedIterator<Building> bunkers = game.currentTeam().buildings();
-        if (bunkers.size() == 0) { System.out.println(WITHOUT_BUNKERS); return; }
-        System.out.println(bunkers.size() + BUNKERS_LIST);
-        for (int i = 0; i < bunkers.size(); i++){
+        int bunkerNumber = bunkers.size();
+        if (bunkerNumber == 0) { System.out.println(WITHOUT_BUNKERS); return; }
+        System.out.println(bunkerNumber + BUNKERS_LIST);
+        for (int i = 0; i < bunkerNumber; i++){
             Building bunker = bunkers.next();
             System.out.printf("%s with %d %s (%d, %d)\n", bunker.name(), bunker.treasury(),
                     COINS_IN_POSITION, bunker.fieldLocation().getX(), bunker.fieldLocation().getY());
@@ -398,7 +350,7 @@ public class Main {
             case NO_PLAYER -> System.out.println(NO_PLAYER);
             case PLAYER_NOT_FROM_TEAM -> System.out.println(PLAYER_NOT_FROM_TEAM);
             case OK, GAME_OVER -> {
-                Iterator<Action> moves = response.getResult();
+                Iterator<Action> moves = response.getResult();  
                 while (moves.hasNext()) {
                     Action move = moves.next();
                     switch (move.getStatus()) {

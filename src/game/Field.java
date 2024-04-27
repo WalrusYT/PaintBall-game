@@ -29,8 +29,6 @@ public interface Field {
         protected Building building;
         protected int x, y;
 
-        public Cell() {}
-
         public Cell(int x, int y) {
             this.x = x;
             this.y = y;

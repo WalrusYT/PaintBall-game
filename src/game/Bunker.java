@@ -38,7 +38,13 @@ public class Bunker implements Building {
     }
 
     public Bunker(String name, int x, int y, int treasury) {
-        this(null, name, x, y, treasury);
+        this((PaintballTeam) null, name, x, y, treasury);
+    }
+
+    public Bunker(Field field, String name, int x, int y, int treasury) {
+        this(null, name, treasury);
+        this.field = field;
+        fieldLocation = field.setBuildingAt(this, x, y);
     }
 
     private Bunker(PaintballTeam team, String name, int treasury) {

@@ -16,6 +16,9 @@ public interface Game {
 
     int height();
 
+
+    GameStatus addBuilding(int x, int y, int treasury, String buildingName);
+    GameStatus addTeam(String teamName, String buildingName);
     SizedIterator<Building> buildings();
 
     SizedIterator<Team> teams();
@@ -76,6 +79,6 @@ public interface Game {
 
     enum GameStatus {
         OK, TEAM_ELIMINATED, TEAM_ELIM_AND_GAME_OVER, GAME_OVER, INVALID_POSITION, NO_PLAYER, PLAYER_NOT_FROM_TEAM,
-        INVALID_PLAYER_COLOR, INVALID_BUNKER_NAME, WRONG_TEAM_BUNKER
+        INVALID_PLAYER_COLOR, INVALID_BUNKER_NAME, WRONG_TEAM_BUNKER, BUNKER_NOT_CREATED, TEAM_NOT_CREATED
     }
 }

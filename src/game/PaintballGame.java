@@ -16,11 +16,11 @@ public class PaintballGame implements Game {
     /**
      * Array of all bunkers in the game
      */
-    private final Array<Building> allBuildings;
+    private final Array<Building> allBuildings = new ArrayClass<>();
     /**
      * Array of all teams of the game
      */
-    private final Array<Team> teams;
+    private final Array<Team> teams = new ArrayClass<>();
     /**
      * Index of the current team (team that turn is at the particular moment)
      */
@@ -31,10 +31,46 @@ public class PaintballGame implements Game {
      * @param teams Names of the teams of the game
      * @param allBuildings Bunkers of the game
      */
-    public PaintballGame(Field field, Array<Team> teams, Array<Building> allBuildings) {
+    public PaintballGame(Field field) {
         this.field = field;
-        this.teams = teams;
-        this.allBuildings = allBuildings;
+    }
+
+    public PaintballGame(int width, int height){
+        this.field = new PaintballField(width, height);
+    }
+    @Override
+    public GameStatus addTeam(String teamName, String bunkerName){
+        for (int i = 0; i < teams.size(); i++){
+            if (teamName.equals(teams.get(i).name())){
+                return GameStatus.TEAM_NOT_CREATED;
+            }
+        }
+        for (int i = 0; i < allBuildings.size(); i++){
+            Building bunker = allBuildings.get(i);
+            if (bunker.team() != null) continue;
+            if (bunker.name().equals(bunkerName)) {
+                Team team = new PaintballTeam(teamName);
+                team.addBuilding(bunker);
+                teams.insertLast(team);
+                return GameStatus.OK;
+            }
+        }
+        return GameStatus.TEAM_NOT_CREATED;
+    }
+    @Override
+    public GameStatus addBuilding(int x, int y, int treasury, String bunkerName){
+        if (x <= 0 || x > width() || y <= 0 || y > height() || treasury <= 0) {
+            return GameStatus.BUNKER_NOT_CREATED;
+        }
+        if (field.cellAt(x,y).hasBuilding()) return GameStatus.BUNKER_NOT_CREATED;
+        for (int i = 0; i < allBuildings.size(); i++){
+            if (bunkerName.equals(allBuildings.get(i).name())){
+                return GameStatus.BUNKER_NOT_CREATED;
+            }
+        }
+        Building bunker = new Bunker(this.field, bunkerName, x, y, treasury);
+        allBuildings.insertLast(bunker);
+        return GameStatus.OK;
     }
 
     /**
