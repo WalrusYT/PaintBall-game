@@ -30,6 +30,7 @@ public class Bunker implements Building {
 
     /**
      * Constructs an object Bunker with the given treasury, coordinate x, coordinate y and name.
+     * @param field {@link Field} where the bunker will be located
      * @param treasury Amount of coins in the bunker
      * @param x Coordinate X of the bunker
      * @param y Coordinate Y of the bunker
