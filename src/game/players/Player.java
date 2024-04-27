@@ -4,41 +4,64 @@ import game.*;
 import game.data_structures.Array;
 import game.data_structures.Iterator;
 
+/**
+ * Entity which can move to other locations on the field and attack other entities in various ways
+ */
 public abstract class Player implements Entity {
 
+    /**
+     * Reference to the player's team
+     */
     protected Team team;
+    /**
+     * Reference to the field where the player resides
+     */
     protected Field field;
+    /**
+     * Reference to the cell on the field where the player resides
+     */
     protected Field.Cell fieldLocation;
 
-    public Player(Field field, PaintballTeam team, int x, int y) {
-        this.field = field;
-        this.team = team;
-        fieldLocation = field.setPlayerAt(this, x, y);
-    }
-
-    public Player(int x, int y) {
-        this(null, x, y);
-    }
-
-    public Player(PaintballTeam team, int x, int y) {
-        this.team = team;
-        fieldLocation = new Field.Cell(x, y);
-    }
-
-    public Player(PaintballTeam team) {
-        this.team = team;
-    }
-
+    /**
+     * Empty constructor, the initialization is handled by {@link Building#createPlayer(PlayerColor)} method
+     */
     public Player() {}
 
+    /**
+     * Performs an attack on the field, eliminating players and seizing buildings from other teams<br>
+     * Eliminated players may be removed from their respective teams and fields<br>
+     * The attacker may eliminate themselves if they lose the fight
+     * @return status of the attack
+     */
     public abstract ActionStatus attack();
 
+    /**
+     * Moves this player in several directions, changing its position on the field<br>
+     * The player may eliminate players and seize buildings from other teams<br>
+     * The player may also eliminate themselves if they lose the fight
+     * @param dirs {@link Array} of {@link Direction} in which the player will move
+     * @return Information about players movement in the specified directions
+     * in the form of {@link Iterator} over the {@link Action}
+     */
     public abstract Iterator<Action> move(Array<Direction> dirs);
 
+    /**
+     * @return Player's color
+     */
     public abstract PlayerColor color();
 
+    /**
+     * Gets the cost of the player (used in {@link Building#createPlayer(PlayerColor)} to create a player)
+     * @return Player's cost
+     */
     public abstract int cost();
 
+    /**
+     * Gets an adjacent cell from the field, offset in a certain direction from the current location
+     * @param dir {@link Direction} of offset
+     * @return {@link Field.Cell}, adjacent to the current location<br>
+     * {@code null} if the coordinates of the {@link Field.Cell} are out of bounds
+     */
     protected Field.Cell nextCellInDirection(Direction dir) {
         int moveX = 0, moveY = 0;
         switch (dir) {
@@ -47,12 +70,24 @@ public abstract class Player implements Entity {
             case EAST -> moveX = 1;
             case WEST -> moveX = -1;
         }
-        int newX = fieldLocation.getX() + moveX, newY =fieldLocation.getY() + moveY;
+        int newX = fieldLocation.getX() + moveX, newY = fieldLocation.getY() + moveY;
         if (newX <= 0 || newX > field.width() || newY <= 0 || newY > field.height())
             return null;
         return field.cellAt(newX, newY);
     }
 
+    /**
+     * Default method for moving the player in one direction<br>
+     * The player may eliminate players or seize buildings from other teams<br>
+     * The player may also eliminate themselves if they lose the fight
+     * @param dir {@link Direction}, in which the player will move
+     * @return {@link Action} with a status:<br>
+     * {@link ActionStatus#INVALID_DIRECTION} if the direction is {@link Direction#INVALID}<br>
+     * {@link ActionStatus#OFF_THE_MAP} if the next location is off the map<br>
+     * {@link ActionStatus#POSITION_OCCUPIED} if the next location is occupied by a player from the same team<br>
+     * Otherwise, the {@link Action} will consist of the player's updated {@link Field.Cell} location
+     * and a status from the {@link #attackCell(Field.Cell)} method
+     */
     protected Action moveDefault(Direction dir) {
         if (dir == Direction.INVALID) {
             return new Action(ActionStatus.INVALID_DIRECTION);
@@ -94,6 +129,17 @@ public abstract class Player implements Entity {
         fieldLocation = field.setPlayerAt(this, x, y);
     }
 
+    /**
+     * Performs an attack on the specified {@link Field.Cell}
+     * The player may eliminate a player or seize a building from the other team<br>
+     * The player may also eliminate themselves if they lose the fight<br>
+     * @param cell {@link Field.Cell} where the player will perform an attack
+     * @return {@link ActionStatus#NOTHING} if nothing happened during the attack<br>
+     * {@link ActionStatus#PLAYER_ELIMINATED} if the attacker was eliminated during the attack<br>
+     * {@link ActionStatus#WON_FIGHT} if the attacker eliminated the other player<br>
+     * {@link ActionStatus#BUNKER_SEIZED} if the attacker seized the building<br>
+     * {@link ActionStatus#WON_AND_SEIZED} if the attacker eliminated the other player and seized the building<br>
+     */
     public ActionStatus attackCell(Field.Cell cell) {
         Player defender = cell.getPlayer();
         ActionStatus status = ActionStatus.NOTHING;
@@ -123,7 +169,7 @@ public abstract class Player implements Entity {
     /**
      * Make player fight with another one (defender)
      * @param defender player, who is attacked
-     * @return <code>true</code> if the attacker wins, and <code>false</code> otherwise
+     * @return {@code true} if the attacker wins, and {@code false} otherwise
      */
     public boolean fight(Player defender) {
         PlayerColor attackerColor = this.color();
@@ -137,10 +183,19 @@ public abstract class Player implements Entity {
         }
     }
 
+    /**
+     * Color of the player, used in {@link Building#createPlayer(PlayerColor)}
+     */
     public enum PlayerColor {
 
         RED, GREEN, BLUE;
 
+        /**
+         * Converts the {@link String} equivalent of the color to {@link PlayerColor}
+         * @param name {@link String} of the color
+         * @return {@link PlayerColor} corresponding to its {@link String} equivalent<br>
+         * {@code null} if the color is invalid
+         */
         public static PlayerColor fromName(String name) {
             switch (name) {
                 case "green" -> { return PlayerColor.GREEN; }
@@ -151,9 +206,18 @@ public abstract class Player implements Entity {
         }
     }
 
+    /**
+     * 2D directions, used in {@link Player#move(Array)}
+     */
     public enum Direction {
         NORTH, SOUTH, EAST, WEST, INVALID;
 
+        /**
+         * Converts the {@link String} equivalent of the direction to {@link Direction}
+         * @param name {@link String} of the direction
+         * @return {@link Direction} corresponding to its {@link String} equivalent<br>
+         * {@link Direction#INVALID} if the direction is invalid
+         */
         public static Direction fromName(String name) {
             switch (name) {
                 case "north" -> { return Direction.NORTH; }
@@ -165,6 +229,11 @@ public abstract class Player implements Entity {
         }
     }
 
+    /**
+     * Represents the state of the player during a {@link Player#move(Array)} in one direction
+     * or during an {@link Player#attack()} on a cell
+     * Contains reference to the player, its location and the status {@link ActionStatus} after the action
+     */
     public class Action {
         private final Field.Cell location;
         private final Player player;
@@ -197,6 +266,9 @@ public abstract class Player implements Entity {
         }
     }
 
+    /**
+     * Status of the action, used to easily determine what happened during an action (move, attack)
+     */
     public enum ActionStatus {
         NOTHING, WON_FIGHT, PLAYER_ELIMINATED, BUNKER_SEIZED, WON_AND_SEIZED,
         INVALID_MOVE, INVALID_DIRECTION, OFF_THE_MAP, POSITION_OCCUPIED, SURVIVED

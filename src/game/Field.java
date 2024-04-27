@@ -4,14 +4,27 @@ import game.players.Player;
 import game.data_structures.Iterator;
 
 /**
- * Class that represents a Field
+ * Interface that represents a Field
  */
 public interface Field {
 
+    /**
+     * @return Width of this field
+     */
     int width();
 
+    /**
+     * @return Height of this field
+     */
     int height();
-    
+
+    /**
+     * Sets the location of the specified player on this field<br>
+     * @param player {@link Player} which will be placed on this field
+     * @param x Coordinate x of the location
+     * @param y Coordinate y of the location
+     * @return Reference to a {@link Field.Cell} where the player was set
+     */
     Cell setPlayerAt(Player player, int x, int y);
 
     boolean removePlayerAt(int x, int y);

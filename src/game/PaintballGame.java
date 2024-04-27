@@ -26,18 +26,10 @@ public class PaintballGame implements Game {
      */
     private int currentTeamIndex = 0;
 
-    /**
-     * Constructs an object PaintballGame with the given width, height, team names and bunkers
-     * @param teams Names of the teams of the game
-     * @param allBuildings Bunkers of the game
-     */
-    public PaintballGame(Field field) {
-        this.field = field;
-    }
-
     public PaintballGame(int width, int height){
         this.field = new PaintballField(width, height);
     }
+
     @Override
     public GameStatus addTeam(String teamName, String bunkerName){
         for (int i = 0; i < teams.size(); i++){
@@ -57,6 +49,7 @@ public class PaintballGame implements Game {
         }
         return GameStatus.TEAM_NOT_CREATED;
     }
+
     @Override
     public GameStatus addBuilding(int x, int y, int treasury, String bunkerName){
         if (x <= 0 || x > width() || y <= 0 || y > height() || treasury <= 0) {

@@ -3,6 +3,11 @@ package game.players;
 import game.data_structures.*;
 import game.Field;
 
+/**
+ * Green variant of a {@link Player}<br>
+ * Moves one direction at a time
+ * Attacks every cell on the diagonals it's located in, altering between them clockwise
+ */
 public class GreenPlayer extends Player {
 
     public GreenPlayer() {}

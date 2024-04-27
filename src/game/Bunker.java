@@ -15,8 +15,17 @@ public class Bunker implements Building {
      * Name of the bunker
      */
     private final String name;
+    /**
+     * Reference to the building's team
+     */
     private Team team;
-    private Field field;
+    /**
+     * Reference to the field where the building is located
+     */
+    private final Field field;
+    /**
+     * Reference to the cell on the field where the building is located
+     */
     private Field.Cell fieldLocation;
 
     /**
@@ -26,31 +35,11 @@ public class Bunker implements Building {
      * @param y Coordinate Y of the bunker
      * @param name Name of the bunker
      */
-    public Bunker(Field field, PaintballTeam team, String name, int x, int y, int treasury) {
-        this(team, name, treasury);
-        this.field = field;
-        fieldLocation = field.setBuildingAt(this, x, y);
-    }
-
-    public Bunker(PaintballTeam team, String name, int x, int y, int treasury) {
-        this(team, name, treasury);
-        fieldLocation = new Field.Cell(x, y);
-    }
-
-    public Bunker(String name, int x, int y, int treasury) {
-        this((PaintballTeam) null, name, x, y, treasury);
-    }
-
     public Bunker(Field field, String name, int x, int y, int treasury) {
-        this(null, name, treasury);
+        this.treasury = treasury;
+        this.name = name;
         this.field = field;
         fieldLocation = field.setBuildingAt(this, x, y);
-    }
-
-    private Bunker(PaintballTeam team, String name, int treasury) {
-        this.team = team;
-        this.name = name;
-        this.treasury = treasury;
     }
 
     @Override

@@ -3,6 +3,11 @@ package game.players;
 import game.data_structures.*;
 import game.Field;
 
+/**
+ * Red variant of a {@link Player}<br>
+ * Moves up to three directions at a time
+ * Attacks every cell in a rectangular area from its position to the bottom right cell
+ */
 public class RedPlayer extends Player {
 
     public RedPlayer() {}
