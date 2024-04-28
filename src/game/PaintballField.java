@@ -16,12 +16,12 @@ public class PaintballField implements Field {
      */
     private final int height;
     /**
-     * Double array of objects of the type Cell
+     * 2D array of objects of the type Cell
      */
     private final Cell[][] cells;
 
     /**
-     * Constructs an object Paintballfield with the given width and height
+     * Constructs an object {@link PaintballField} with the given width and height
      * @param width Width of the field
      * @param height Height of the field
      */
@@ -73,21 +73,11 @@ public class PaintballField implements Field {
         return removed;
     }
 
-    /**
-     * Returns a cell with the coordinate X, Y
-     * @param x coordinate X of the cell
-     * @param y coordinate Y of the cell
-     * @return a cell with the coordinate X, Y
-     */
     @Override
     public Cell cellAt(int x, int y) {
         return cells[y - 1][x - 1];
     }
 
-    /**
-     * Returns an iterator of the field
-     * @return an iterator of the field
-     */
     @Override
     public Iterator<Cell> iterator() {
         return new Iterator<>() {

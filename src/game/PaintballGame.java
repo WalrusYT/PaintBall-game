@@ -14,7 +14,7 @@ public class PaintballGame implements Game {
      */
     private final Field field;
     /**
-     * Array of all bunkers in the game
+     * Array of all buildings in the game
      */
     private final Array<Building> allBuildings = new ArrayClass<>();
     /**
@@ -26,6 +26,13 @@ public class PaintballGame implements Game {
      */
     private int currentTeamIndex = 0;
 
+    /**
+     * Create a new game with the specified {@link Field} width and height<br>
+     * further initialization should happen using the {@link Game#addBuilding(int, int, int, String)}
+     * and {@link Game#addTeam(String, String)} methods
+     * @param width The width of the field
+     * @param height The height of the field
+     */
     public PaintballGame(int width, int height){
         this.field = new PaintballField(width, height);
     }
@@ -66,18 +73,6 @@ public class PaintballGame implements Game {
         return GameStatus.OK;
     }
 
-    /**
-     * Returns all teams of the game
-     * @return all teams of the game
-     */
-    public SizedIterator<Team> getTeams() {
-        return teams.iterator();
-    }
-
-    /**
-     * Returns current team (team that turn is at the particular moment)
-     * @return current team
-     */
     @Override
     public Team currentTeam() {
         return teams.get(currentTeamIndex);
@@ -103,12 +98,6 @@ public class PaintballGame implements Game {
         return teams.iterator();
     }
 
-    /**
-     * Creates a player without going to the next turn by its color and bunker name
-     * @param color color of the player
-     * @param bunkerName bunker where player should be created
-     * @return the response of the game of the enum type <code>GameResponse</code>
-     */
     @Override
     public GameResponse<CreateStatus> createPlayer(PlayerColor color, String bunkerName) {
         if (color == null) {
@@ -133,11 +122,12 @@ public class PaintballGame implements Game {
         }
         CreateStatus status = building.createPlayer(color);
         nextTurn();
-        return new GameResponse<>(status, GameStatus.OK); // created
+        return new GameResponse<>(status); // created
     }
 
     /**
-     * Removes empty teams
+     * Removes empty teams, called at the end of some methods where
+     * a team can undergo certain modifications
      */
     private void removeEmptyTeams() {
         for (int i = 0; i < teams.size(); i++) {
@@ -149,12 +139,19 @@ public class PaintballGame implements Game {
         }
     }
 
+    /**
+     * Check whether the game has ended
+     * @return {@code true} if there's only 1 team left, otherwise {@code false}
+     */
     private boolean isGameOver() { return teams.size() == 1; }
 
     private Team winner() {
         return teams.get(0);
     }
 
+    /**
+     * Performs some actions at the end of each team's turn
+     */
     private void nextTurn() {
         currentTeamIndex++;
         if (currentTeamIndex >= teams.size()) currentTeamIndex = 0;
@@ -163,13 +160,6 @@ public class PaintballGame implements Game {
         }
     }
 
-    /**
-     * Moves a player from the coordinates (X,Y) without going to the next turn with the given directions (from 1 to 3)
-     * @param x X coordinate of the player
-     * @param y Y coordinate of the player
-     * @param directions directions (from 1 to 3)
-     * @return response of the type <code>MoveResponse</code> containing moving state
-     */
     @Override
     public GameResponse<Iterator<Action>> movePlayerAt(int x, int y, Array<Direction> directions) {
         if (x < 0 || x > field.width() || y < 0 || y > field.height()) {
@@ -191,13 +181,9 @@ public class PaintballGame implements Game {
             return new GameResponse<>(actions, GameStatus.GAME_OVER, this.winner());
         }
         nextTurn();
-        return new GameResponse<>(actions, GameStatus.OK);
+        return new GameResponse<>(actions);
     }
 
-    /**
-     * Make player attack without going to the next turn
-     * @return the response of the game of type <code>GameResponse</code>
-     */
     @Override
     public GameResponse<Team> playersAttack() {
         Team attackerTeam = this.currentTeam();
