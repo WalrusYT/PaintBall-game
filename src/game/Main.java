@@ -135,6 +135,7 @@ public class Main {
      * Starts a new game
      * @param in Scanner object to read user input
      * @param args arguments of the command (width, height, number of teams, number of bunkers)
+     * @return {@link Game} game that is created
      */
     private static Game newGame(Scanner in, String args) {
         String[] commandArgs = args.split(" ");

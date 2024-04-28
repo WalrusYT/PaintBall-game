@@ -12,11 +12,11 @@ public class PaintballTeam implements Team {
      */
     private final String name;
     /**
-     * Array of all players in this team
+     * Array of players of the team
      */
     private final Array<Player> players = new ArrayClass<>();
     /**
-     * Array of all buildings in this team
+     * Array of buildings of the team
      */
     private final Array<Building> buildings = new ArrayClass<>();
 
@@ -38,23 +38,21 @@ public class PaintballTeam implements Team {
         return name;
     }
 
+    @Override
     public void addPlayer(Player player) {
         player.setTeam(this);
         players.insertLast(player);
     }
-
     @Override
     public void removePlayer(Player player) {
         players.removeAt(players.searchIndexOf(player));
         player.setTeam(null);
     }
-
     @Override
     public void addBuilding(Building building) {
         building.setTeam(this);
         buildings.insertLast(building);
     }
-
     @Override
     public void removeBuilding(Building building) {
         buildings.removeAt(buildings.searchIndexOf(building));
