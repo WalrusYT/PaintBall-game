@@ -42,6 +42,14 @@ public class BluePlayer extends Player {
     }
 
     @Override
+    public boolean fight(Player defender){
+        PlayerColor attackerColor = this.color();
+        PlayerColor defenderColor = defender.color();
+        if (attackerColor == defenderColor) return true;
+        return defenderColor == PlayerColor.GREEN;
+    }
+
+    @Override
     public PlayerColor color() {
         return PlayerColor.BLUE;
     }

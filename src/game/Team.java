@@ -3,6 +3,9 @@ package game;
 import game.data_structures.SizedIterator;
 import game.players.Player;
 
+/**
+ * Interface that represents a Team
+ */
 public interface Team {
     /**
      * Checks if the team is empty

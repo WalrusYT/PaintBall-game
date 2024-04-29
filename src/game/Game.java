@@ -3,7 +3,6 @@ package game;
 import game.data_structures.Array;
 import game.data_structures.Iterator;
 import game.data_structures.SizedIterator;
-import game.players.Player;
 import game.players.Player.*;
 import game.Building.CreateStatus;
 
@@ -13,14 +12,25 @@ import game.Building.CreateStatus;
 public interface Game {
 
     /**
+     * Returns width of the underlying {@link Field}
      * @return Width of the underlying {@link Field}
      */
     int width();
 
     /**
+     * Returns height of the underlying {@link Field}
      * @return Height of the underlying {@link Field}
      */
     int height();
+
+    /**
+     * Initializes a new {@link Field} for this game with the specified width and height
+     * @param width The width of the new field
+     * @param height The height of the new field
+     * @return {@link GameStatus#INVALID_SIZE} if either the width or the height are less than 10<br>
+     * {@link GameStatus#OK} if the field was successfully initialized
+     */
+    GameStatus setField(int width, int height);
 
     /**
      * Creates and adds a new instance of {@link Building} to the game<br>
@@ -98,19 +108,44 @@ public interface Game {
      * The result {@link Team} of {@link GameResponse} is redundant, since it contains the winner team,
      * which is also stored in the dedicated winner field of game response
      */
-    GameResponse<Team> playersAttack();
+    GameResponse<Field.Map> playersAttack();
 
     /**
-     * Gets an {@link Iterator} over all the cells of the game's {@link Field}
-     * @return {@link Iterator} over {@link Field.Cell}
+     * Returns a snapshot of the field in the form of {@link Field.Map}
+     * @return A snapshot of the field in the form of {@link Field.Map}
      */
-    Iterator<Field.Cell> map();
+    Field.Map map();
+
+    /**
+     * Returns a snapshot of the field in the form of {@link Field.Map}
+     * @return A snapshot of the field in the form of {@link Field.Map}
+     * from the view of the specified {@link Team}
+     */
+    Field.Map map(Team team);
 
     /**
      * Gets a reference to the {@link Team} that is currently making a move
      * @return {@link Team} that currently moves
      */
     Team currentTeam();
+
+    /**
+     * Check whether the game is currently in progress or not
+     * @return {@code true} if the game is in progress, otherwise {@code false}
+     */
+    boolean inProgress();
+
+    /**
+     * Starts the game if certain conditions are met (2 or more teams must exist)<br>
+     * @return {@link GameStatus#NOT_ENOUGH_TEAMS} if the game fails to start due to there being less than 2 teams<br>
+     * {@link GameStatus#OK} if the conditions are met and the game has started successfully
+     */
+    GameStatus start();
+
+    /**
+     * Stops the game that is currently in progress by clearing its state
+     */
+    void stop();
 
     /**
      * Represents a general response of the game, containing some status of the logic execution and
@@ -147,6 +182,16 @@ public interface Game {
         }
 
         /**
+         * Initializes a successful response with a custom success status other than {@link GameStatus#OK}
+         * and some result
+         * @param result The result of the logic execution
+         * @param status The status of the logic execution
+         */
+        public GameResponse(T result, GameStatus status) {
+            this(result, status, null);
+        }
+
+        /**
          * Creates a new game response with the specified result and a default success status {@link GameStatus#OK},
          * mostly used when initializing a response when the logic has successfully executed
          * @param result The result of the logic execution
@@ -165,6 +210,7 @@ public interface Game {
         }
 
         /**
+         * Returns the result of the logic execution
          * @return The result of the logic execution
          */
         public T getResult() {
@@ -172,6 +218,7 @@ public interface Game {
         }
 
         /**
+         * Returns the status of the logic execution
          * @return The status of the logic execution
          */
         public GameStatus getStatus() {
@@ -179,6 +226,7 @@ public interface Game {
         }
 
         /**
+         * Returns the winning {@link Team}
          * @return The winning {@link Team}
          */
         public Team getWinner() {
@@ -190,7 +238,7 @@ public interface Game {
      * All possible statuses of the game logic execution
      */
     enum GameStatus {
-        OK, TEAM_ELIMINATED, TEAM_ELIM_AND_GAME_OVER, GAME_OVER, INVALID_POSITION, NO_PLAYER, PLAYER_NOT_FROM_TEAM,
-        INVALID_PLAYER_COLOR, INVALID_BUNKER_NAME, WRONG_TEAM_BUNKER, BUNKER_NOT_CREATED, TEAM_NOT_CREATED
+        OK, TEAM_ELIMINATED, TEAM_ELIM_AND_GAME_OVER, GAME_OVER, INVALID_POSITION, NO_PLAYER, PLAYER_NOT_FROM_TEAM, INVALID_SIZE,
+        INVALID_PLAYER_COLOR, INVALID_BUNKER_NAME, WRONG_TEAM_BUNKER, BUNKER_NOT_CREATED, TEAM_NOT_CREATED, NOT_ENOUGH_TEAMS
     }
 }

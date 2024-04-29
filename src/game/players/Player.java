@@ -144,7 +144,7 @@ public abstract class Player implements Entity {
         Player defender = cell.getPlayer();
         ActionStatus status = ActionStatus.NOTHING;
         if (defender != null) {
-            if (defender.team().equals(this.team())) return status;
+            if (defender.team() == this.team()) return status;
             boolean wonFight = fight(defender);
             if (!wonFight) {
                 field.removePlayerAt(this.fieldLocation.getX(), this.fieldLocation.getY());
@@ -171,17 +171,7 @@ public abstract class Player implements Entity {
      * @param defender player, who is attacked
      * @return {@code true} if the attacker wins, and {@code false} otherwise
      */
-    public boolean fight(Player defender) {
-        PlayerColor attackerColor = this.color();
-        PlayerColor defenderColor = defender.color();
-        if (attackerColor == defenderColor) return true;
-        switch (attackerColor) {
-            case PlayerColor.RED -> { return defenderColor == PlayerColor.BLUE; }
-            case PlayerColor.BLUE -> {  return defenderColor == PlayerColor.GREEN; }
-            case PlayerColor.GREEN -> { return defenderColor == PlayerColor.RED; }
-            default -> { return true; }
-        }
-    }
+    public abstract boolean fight(Player defender);
 
     /**
      * Color of the player, used in {@link Building#createPlayer(PlayerColor)}
