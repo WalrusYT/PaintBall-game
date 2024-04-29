@@ -318,11 +318,11 @@ public class Main {
         PlayerColor color = PlayerColor.fromName(playerType);
         GameResponse<CreateStatus> response = game.createPlayer(color, bunkerName);
         switch (response.getStatus()) {
-            case GameStatus.OK -> {
+            case OK -> {
                 switch (response.getResult()) {
-                    case CreateStatus.OK -> System.out.printf("%s %s in %s\n", playerType, PLAYER_CREATED, bunkerName);
-                    case CreateStatus.NOT_ENOUGH_MONEY -> System.out.println(NOT_ENOUGH_COINS);
-                    case CreateStatus.OCCUPIED -> System.out.println(BUNKER_OCCUPIED);
+                    case OK -> System.out.printf("%s %s in %s\n", playerType, PLAYER_CREATED, bunkerName);
+                    case NOT_ENOUGH_MONEY -> System.out.println(NOT_ENOUGH_COINS);
+                    case OCCUPIED -> System.out.println(BUNKER_OCCUPIED);
                 }
             }
             case INVALID_PLAYER_COLOR -> System.out.println(INVALID_PLAYER_COLOR);
