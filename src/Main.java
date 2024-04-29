@@ -1,5 +1,4 @@
-package game;
-
+import game.*;
 import game.data_structures.Array;
 import game.data_structures.ArrayClass;
 import game.data_structures.Iterator;

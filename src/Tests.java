@@ -1,4 +1,4 @@
-package game; /**
+/**
  * @author POO 67258 67398 team 2023/24
  */
 
@@ -152,7 +152,7 @@ public class Tests {
 		try {
 			Locale.setDefault(Locale.US);
 			System.setIn(new FileInputStream(input));
-			Class<?> mainClass = Class.forName("game.Main");
+			Class<?> mainClass = Class.forName("Main");
 			mainClass.getMethod("main", String[].class).invoke(null, new Object[] { new String[0] });
 		} catch (Exception e) {
 			e.printStackTrace();
