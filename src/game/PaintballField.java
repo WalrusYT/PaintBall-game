@@ -1,7 +1,6 @@
 package game;
 
 import game.players.Player;
-import game.data_structures.Iterator;
 
 /**
  * Class that represents a Paintball Field
@@ -79,18 +78,12 @@ public class PaintballField implements Field {
     }
 
     @Override
-    public Iterator<Cell> iterator() {
-        return new Iterator<>() {
-            int i = -1;
+    public Map map() {
+        return new Map(this);
+    }
 
-            public boolean hasNext() {
-                return i < width * height - 1;
-            }
-
-            public Cell next() {
-                i++;
-                return cells[i / width][i % width];
-            }
-        };
+    @Override
+    public Map map(Team team) {
+        return new Map(this, team);
     }
 }

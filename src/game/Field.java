@@ -61,10 +61,15 @@ public interface Field {
     Cell cellAt(int x, int y);
 
     /**
-     * Gets an {@link Iterator} over all the cells of this field
-     * @return {@link Iterator} over {@link Cell}
+     * @return A snapshot of the field in the form of {@link Map}
+     * from the view of the specified {@link Team}
      */
-    Iterator<Cell> iterator();
+    Map map(Team team);
+
+    /**
+     * @return A snapshot of the field in the form of {@link Map}
+     */
+    Map map();
 
     /**
      * Unit of space of the field, may contain some entities
@@ -135,6 +140,64 @@ public interface Field {
          */
         public int getY() {
             return y;
+        }
+    }
+
+    class Map {
+        private final int width, height;
+        private final Team team;
+        private final Iterator<MapCell> mapCells;
+
+        public Map(Field field) {
+            this(field, null);
+        }
+
+        public Map(Field field, Team team) {
+            this.team = team;
+            this.width = field.width();
+            this.height = field.height();
+            this.mapCells = new Iterator<>() {
+                int i = -1;
+
+                public boolean hasNext() {
+                    return i < width * height - 1;
+                }
+
+                public MapCell next() {
+                    i++;
+                    Cell cell = field.cellAt(i % width + 1, i / width + 1);
+                    if (cell.player != null && team != cell.player.team()) return MapCell.NONE;
+                    if (cell.building != null && team != cell.building.team()) return MapCell.NONE;
+                    return MapCell.fromCell(cell);
+                }
+            };
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public Team getTeam() {
+            return team;
+        }
+
+        public Iterator<MapCell> getMapCells() {
+            return mapCells;
+        }
+    }
+
+    enum MapCell {
+        BUILDING_AND_PLAYER, BUILDING, PLAYER, NONE;
+
+        public static MapCell fromCell(Cell cell) {
+            if (cell.hasBuilding() && cell.hasPlayer()) return BUILDING_AND_PLAYER;
+            if (cell.hasBuilding()) return BUILDING;
+            if (cell.hasPlayer()) return PLAYER;
+            return NONE;
         }
     }
 }

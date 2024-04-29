@@ -12,29 +12,40 @@ public class PaintballGame implements Game {
     /**
      * Field of the game
      */
-    private final Field field;
+    private Field field;
     /**
      * Array of all buildings in the game
      */
-    private final Array<Building> allBuildings = new ArrayClass<>();
+    private Array<Building> allBuildings = new ArrayClass<>();
     /**
      * Array of all teams of the game
      */
-    private final Array<Team> teams = new ArrayClass<>();
+    private Array<Team> teams = new ArrayClass<>();
     /**
      * Index of the current team (team that turn is at the particular moment)
      */
     private int currentTeamIndex = 0;
 
     /**
-     * Create a new game with the specified {@link Field} width and height<br>
-     * further initialization should happen using the {@link Game#addBuilding(int, int, int, String)}
-     * and {@link Game#addTeam(String, String)} methods
-     * @param width The width of the field
-     * @param height The height of the field
+     * Indication of a game being in progress
      */
-    public PaintballGame(int width, int height){
-        this.field = new PaintballField(width, height);
+    boolean inProgress = false;
+
+    @Override
+    public int width() {
+        return field.width();
+    }
+
+    @Override
+    public int height() {
+        return field.height();
+    }
+
+    @Override
+    public GameStatus setField(int width, int height) {
+        if (width < 10 || height < 10) return GameStatus.INVALID_SIZE;
+        field = new PaintballField(width, height);
+        return GameStatus.OK;
     }
 
     @Override
@@ -59,7 +70,7 @@ public class PaintballGame implements Game {
 
     @Override
     public GameStatus addBuilding(int x, int y, int treasury, String bunkerName){
-        if (x <= 0 || x > width() || y <= 0 || y > height() || treasury <= 0) {
+        if (x <= 0 || x > field.width() || y <= 0 || y > field.height() || treasury <= 0) {
             return GameStatus.BUNKER_NOT_CREATED;
         }
         if (field.cellAt(x,y).hasBuilding()) return GameStatus.BUNKER_NOT_CREATED;
@@ -76,16 +87,6 @@ public class PaintballGame implements Game {
     @Override
     public Team currentTeam() {
         return teams.get(currentTeamIndex);
-    }
-
-    @Override
-    public int width() {
-        return field.width();
-    }
-
-    @Override
-    public int height() {
-        return field.height();
     }
 
     @Override
@@ -116,13 +117,35 @@ public class PaintballGame implements Game {
             nextTurn();
             return new GameResponse<>(GameStatus.INVALID_BUNKER_NAME);
         }
-        if (!building.team().equals(this.currentTeam())){
+        if (building.team() != this.currentTeam()){
             nextTurn();
             return new GameResponse<>(GameStatus.WRONG_TEAM_BUNKER); // Bunker illegally invaded. + переход к след ходу
         }
         CreateStatus status = building.createPlayer(color);
         nextTurn();
         return new GameResponse<>(status); // created
+    }
+
+    @Override
+    public boolean inProgress() {
+        return inProgress;
+    }
+
+    @Override
+    public GameStatus start() {
+        if (teams.size() < 2) return GameStatus.NOT_ENOUGH_TEAMS;
+        inProgress = true;
+        return GameStatus.OK;
+    }
+
+
+    @Override
+    public void stop() {
+        field = null;
+        currentTeamIndex = 0;
+        allBuildings = new ArrayClass<>();
+        teams = new ArrayClass<>();
+        inProgress = false;
     }
 
     /**
@@ -145,6 +168,10 @@ public class PaintballGame implements Game {
      */
     private boolean isGameOver() { return teams.size() == 1; }
 
+    /**
+     * Get the first {@link Team} from the teams {@link Array}, which is considered the winner if the size of the array is 1
+     * @return Reference to the winner team
+     */
     private Team winner() {
         return teams.get(0);
     }
@@ -171,39 +198,50 @@ public class PaintballGame implements Game {
             nextTurn();
             return new GameResponse<>(GameStatus.NO_PLAYER);
         }
-        if (!player.team().equals(this.currentTeam())) {
+        if (player.team() != this.currentTeam()) {
             nextTurn();
             return new GameResponse<>(GameStatus.PLAYER_NOT_FROM_TEAM);
         }
         Iterator<Action> actions = player.move(directions);
         removeEmptyTeams();
         if (isGameOver()) {
-            return new GameResponse<>(actions, GameStatus.GAME_OVER, this.winner());
+            Team winner = winner();
+            this.stop();
+            return new GameResponse<>(actions, GameStatus.GAME_OVER, winner);
         }
         nextTurn();
         return new GameResponse<>(actions);
     }
 
     @Override
-    public GameResponse<Team> playersAttack() {
-        Team attackerTeam = this.currentTeam();
+    public GameResponse<Field.Map> playersAttack() {
         GameStatus status = GameStatus.OK;
         Iterator<Player> players = currentTeam().players();
         while (players.hasNext()) {
             players.next().attack();
         }
+        Field.Map mapAfterAttack = map(this.currentTeam());
 
         if (currentTeam().isEmpty()) status = GameStatus.TEAM_ELIMINATED;
         removeEmptyTeams();
         if (isGameOver()) {
-            status = status == GameStatus.TEAM_ELIMINATED ? GameStatus.TEAM_ELIM_AND_GAME_OVER : GameStatus.GAME_OVER;
+            Team winner = winner();
+            this.stop();
+            if (status == GameStatus.TEAM_ELIMINATED)
+                return new GameResponse<>(mapAfterAttack, GameStatus.TEAM_ELIM_AND_GAME_OVER, winner);
+            return new GameResponse<>(mapAfterAttack, GameStatus.GAME_OVER, winner);
         }
         nextTurn();
-        return new GameResponse<>(attackerTeam, status, winner());
+        return new GameResponse<>(mapAfterAttack, status);
     }
 
     @Override
-    public Iterator<Field.Cell> map() {
-        return field.iterator();
+    public Field.Map map() {
+        return field.map();
+    }
+
+    @Override
+    public Field.Map map(Team team) {
+        return field.map(team);
     }
 }

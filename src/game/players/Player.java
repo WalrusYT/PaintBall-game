@@ -144,7 +144,7 @@ public abstract class Player implements Entity {
         Player defender = cell.getPlayer();
         ActionStatus status = ActionStatus.NOTHING;
         if (defender != null) {
-            if (defender.team().equals(this.team())) return status;
+            if (defender.team() == this.team()) return status;
             boolean wonFight = fight(defender);
             if (!wonFight) {
                 field.removePlayerAt(this.fieldLocation.getX(), this.fieldLocation.getY());
