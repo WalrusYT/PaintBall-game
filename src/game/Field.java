@@ -9,11 +9,13 @@ import game.data_structures.Iterator;
 public interface Field {
 
     /**
+     * Returns width of this field
      * @return Width of this field
      */
     int width();
 
     /**
+     * Returns height of this field
      * @return Height of this field
      */
     int height();
@@ -61,12 +63,14 @@ public interface Field {
     Cell cellAt(int x, int y);
 
     /**
+     * Returns a snapshot of the field in the form of {@link Map}
      * @return A snapshot of the field in the form of {@link Map}
      * from the view of the specified {@link Team}
      */
     Map map(Team team);
 
     /**
+     * Returns a snapshot of the field in the form of {@link Map}
      * @return A snapshot of the field in the form of {@link Map}
      */
     Map map();
@@ -99,6 +103,7 @@ public interface Field {
         }
 
         /**
+         * Returns a reference to a {@link Player} located in this cell
          * @return Reference to a {@link Player} located in this cell
          */
         public Player getPlayer() {
@@ -114,6 +119,7 @@ public interface Field {
         }
 
         /**
+         * Returns a reference to a {@link Building} located in this cell
          * @return Reference to a {@link Building} located in this cell
          */
         public Building getBuilding() {
@@ -129,6 +135,7 @@ public interface Field {
         }
 
         /**
+         * Returns X coordinate of this cell on its parent {@link Field}
          * @return X coordinate of this cell on its parent {@link Field}
          */
         public int getX() {
@@ -136,6 +143,7 @@ public interface Field {
         }
 
         /**
+         * Returns Y coordinate of this cell on its parent {@link Field}
          * @return Y coordinate of this cell on its parent {@link Field}
          */
         public int getY() {
@@ -183,7 +191,6 @@ public interface Field {
             this.height = field.height();
             this.mapCells = new Iterator<>() {
                 int i = -1;
-
                 public boolean hasNext() {
                     return i < width * height - 1;
                 }
@@ -199,6 +206,7 @@ public interface Field {
         }
 
         /**
+         * Returns height of the {@link Field}
          * @return Height of the {@link Field}
          */
         public int getHeight() {
@@ -206,6 +214,7 @@ public interface Field {
         }
 
         /**
+         * Returns width of the {@link Field}
          * @return Width of the {@link Field}
          */
         public int getWidth() {
@@ -213,6 +222,7 @@ public interface Field {
         }
 
         /**
+         * Returns {@link Team} which is used as the point of view for the map
          * @return {@link Team} which is used as the point of view for the map
          */
         public Team getTeam() {
@@ -220,6 +230,7 @@ public interface Field {
         }
 
         /**
+         * Returns an {@link Iterator} over {@link MapCell} enum representing the state of one singular {@link Cell}
          * @return An {@link Iterator} over {@link MapCell} enum representing the state of one singular {@link Cell}
          */
         public Iterator<MapCell> getMapCells() {

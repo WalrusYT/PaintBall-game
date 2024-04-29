@@ -12,11 +12,13 @@ import game.Building.CreateStatus;
 public interface Game {
 
     /**
+     * Returns width of the underlying {@link Field}
      * @return Width of the underlying {@link Field}
      */
     int width();
 
     /**
+     * Returns height of the underlying {@link Field}
      * @return Height of the underlying {@link Field}
      */
     int height();
@@ -109,11 +111,13 @@ public interface Game {
     GameResponse<Field.Map> playersAttack();
 
     /**
+     * Returns a snapshot of the field in the form of {@link Field.Map}
      * @return A snapshot of the field in the form of {@link Field.Map}
      */
     Field.Map map();
 
     /**
+     * Returns a snapshot of the field in the form of {@link Field.Map}
      * @return A snapshot of the field in the form of {@link Field.Map}
      * from the view of the specified {@link Team}
      */
@@ -206,6 +210,7 @@ public interface Game {
         }
 
         /**
+         * Returns the result of the logic execution
          * @return The result of the logic execution
          */
         public T getResult() {
@@ -213,6 +218,7 @@ public interface Game {
         }
 
         /**
+         * Returns the status of the logic execution
          * @return The status of the logic execution
          */
         public GameStatus getStatus() {
@@ -220,6 +226,7 @@ public interface Game {
         }
 
         /**
+         * Returns the winning {@link Team}
          * @return The winning {@link Team}
          */
         public Team getWinner() {

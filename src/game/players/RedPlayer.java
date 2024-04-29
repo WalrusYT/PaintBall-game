@@ -22,7 +22,13 @@ public class RedPlayer extends Player {
         }
         return ActionStatus.SURVIVED;
     }
-
+    @Override
+    public boolean fight(Player defender){
+        PlayerColor attackerColor = this.color();
+        PlayerColor defenderColor = defender.color();
+        if (attackerColor == defenderColor) return true;
+        return defenderColor == PlayerColor.BLUE;
+    }
     @Override
     public Iterator<Action> move(Array<Direction>  dirs) {
         Array<Action> actions = new ArrayClass<>();

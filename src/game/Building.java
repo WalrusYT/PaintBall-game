@@ -29,6 +29,7 @@ public interface Building extends Entity {
     String name();
 
     /**
+     * Returns the amount of money in the building
      * @return The amount of money in the building
      */
     int treasury();

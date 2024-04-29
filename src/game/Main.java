@@ -12,7 +12,7 @@ import game.players.Player.*;
 import java.util.Scanner;
 /**
  * Main program for the PaintBall Game
- * @author Ilia Taitsel, Taisiia Hlukha 24/25
+ * @author Ilia Taitsel 67258, Taisiia Hlukha 67398 23/24
  */
 public class Main {
     /**
@@ -52,9 +52,9 @@ public class Main {
     public static final String NOT_ENOUGH_ARGS = "ERROR: NOT ENOUGH ARGUMENTS";
     public static final String SIZE_NOT_OK = "ERROR: FIELD RESOLUTION IS NOT OK";
     public static final String NOT_ENOUGH_TEAMS = "FATAL ERROR: Insufficient number of teams.";
-    public static final String BUNKERS_LIST = " bunkers:";
+    public static final String BUNKERS_LIST = "%d bunkers:\n";
     public static final String BUNKER_NOT_CREATED = "Bunker not created.";
-    public static final String TEAMS_LIST = " teams:";
+    public static final String TEAMS_LIST = "%d teams:\n";
     public static final String TEAM_NOT_CREATED = "Team not created.";
     public static final String INVALID_COMMAND = "Invalid command.";
     public static final String WITHOUT_OWNER = "without owner";
@@ -65,7 +65,7 @@ public class Main {
     public static final String WITHOUT_BUNKERS = "Without bunkers.";
     public static final String COINS_IN_POSITION = "coins in position";
     public static final String WITHOUT_PLAYERS = "Without players.";
-    public static final String PLAYERS_LIST = " players:";
+    public static final String PLAYERS_LIST = "%d players:\n";
     public static final String PLAYER_IN_POSITION = "player in position";
     public static final String INVALID_PLAYER_COLOR = "Non-existent player type.";
     public static final String INVALID_BUNKER_NAME = "Non-existent bunker.";
@@ -85,7 +85,7 @@ public class Main {
     public static final String PLAYER_ELIMINATED = "Player eliminated.";
     public static final String WON_AND_SEIZED = "Won the fight and bunker seized.";
     public static final String PLAYER_NOT_FROM_TEAM = "Unable to move player from the enemy team.";
-    public static final String WINNER_IS = "Winner is";
+    public static final String WINNER_IS = "Winner is %s.\n";
     public static final String PLAYERS_ELIMINATED = "All players eliminated.";
     /**
      * Main method. Invokes the command interpreter
@@ -157,7 +157,7 @@ public class Main {
             return;
         }
 
-        System.out.println(bunkerNumber + BUNKERS_LIST);
+        System.out.printf(BUNKERS_LIST, bunkerNumber);
         for (int i = 0; i < bunkerNumber; i++) { 
             String[] input = in.nextLine().split(" ", 4);
             int x = Integer.parseInt(input[0]);
@@ -168,7 +168,7 @@ public class Main {
             if (status == GameStatus.BUNKER_NOT_CREATED) System.out.println(BUNKER_NOT_CREATED);
         }
 
-        System.out.println(teamsNumber + TEAMS_LIST);
+        System.out.printf(TEAMS_LIST, teamsNumber);
         for (int i = 0; i < teamsNumber; i++) {
             String[] input = in.nextLine().split(" ", 2);
             if (input.length < 2) {
@@ -198,7 +198,7 @@ public class Main {
         System.out.println(game.width() + " " + game.height());
         SizedIterator<Building> bunkers = game.buildings();
         int bunkersNumber = bunkers.size();
-        System.out.println(bunkersNumber + BUNKERS_LIST);
+        System.out.printf(BUNKERS_LIST, bunkersNumber);
         for (int i = 0; i < bunkersNumber; i++) {
             Building bunker = bunkers.next();
             Team team = bunker.team();
@@ -208,7 +208,7 @@ public class Main {
         
         SizedIterator<Team> teams = game.teams();
         int teamsNumber = teams.size();
-        System.out.println(teamsNumber + TEAMS_LIST);
+        System.out.printf(TEAMS_LIST, teamsNumber);
         String teamList =  "";
         for (int i = 0; i < teamsNumber; i++) {
             teamList += teams.next().name() + "; ";
@@ -269,7 +269,7 @@ public class Main {
         SizedIterator<Building> bunkers = game.currentTeam().buildings();
         int bunkerNumber = bunkers.size();
         if (bunkerNumber == 0) { System.out.println(WITHOUT_BUNKERS); return; }
-        System.out.println(bunkerNumber + BUNKERS_LIST);
+        System.out.printf(BUNKERS_LIST, bunkerNumber);
         for (int i = 0; i < bunkerNumber; i++){
             Building bunker = bunkers.next();
             System.out.printf("%s with %d %s (%d, %d)\n", bunker.name(), bunker.treasury(),
@@ -289,7 +289,7 @@ public class Main {
         SizedIterator<Player> players = game.currentTeam().players();
         int playersNumber = players.size();
         if (playersNumber == 0) { System.out.println(WITHOUT_PLAYERS); return; }
-        System.out.println(playersNumber+PLAYERS_LIST);
+        System.out.printf(PLAYERS_LIST, playersNumber);
         for (int i = 0; i < playersNumber; i++){ 
             Player player = players.next();
             String color = player.color().name().toLowerCase();
@@ -385,7 +385,7 @@ public class Main {
                     }
                 }
                 if (response.getStatus() == GameStatus.GAME_OVER) {
-                    System.out.printf("%s %s.\n", WINNER_IS, response.getWinner().name());
+                    System.out.printf(WINNER_IS, response.getWinner().name());
                 }
             }
         }
@@ -404,12 +404,12 @@ public class Main {
         switch (response.getStatus()) {
             case TEAM_ELIM_AND_GAME_OVER -> {
                 System.out.println(PLAYERS_ELIMINATED);
-                System.out.printf("%s %s.\n", WINNER_IS, response.getWinner().name());
+                System.out.printf(WINNER_IS, response.getWinner().name());
             }
             case GAME_OVER -> {
                 if (response.getWinner() == response.getResult().getTeam())
                     printMap(response.getResult());
-                System.out.printf("%s %s.\n", WINNER_IS, response.getWinner().name());
+                System.out.printf(WINNER_IS, response.getWinner().name());
             }
             case TEAM_ELIMINATED -> System.out.println(PLAYERS_ELIMINATED);
             case OK -> printMap(response.getResult());

@@ -20,6 +20,7 @@ public interface Entity {
     void setFieldLocation(Field field, int x, int y);
 
     /**
+     * Returns a reference to a {@link Team} that owns this entity
      * @return Reference to a {@link Team} that owns this entity
      */
     Team team();
