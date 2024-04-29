@@ -188,7 +188,7 @@ public abstract class Player implements Entity {
      */
     public enum PlayerColor {
 
-        RED, GREEN, BLUE;
+        RED, GREEN, BLUE, YELLOW;
 
         /**
          * Converts the {@link String} equivalent of the color to {@link PlayerColor}
@@ -201,6 +201,7 @@ public abstract class Player implements Entity {
                 case "green" -> { return PlayerColor.GREEN; }
                 case "red" -> { return PlayerColor.RED; }
                 case "blue" -> { return PlayerColor.BLUE; }
+                case "yellow" -> { return PlayerColor.YELLOW; }
                 default -> { return null; }
             }
         }
