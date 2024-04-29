@@ -108,8 +108,15 @@ public interface Game {
      */
     GameResponse<Field.Map> playersAttack();
 
+    /**
+     * @return A snapshot of the field in the form of {@link Field.Map}
+     */
     Field.Map map();
 
+    /**
+     * @return A snapshot of the field in the form of {@link Field.Map}
+     * from the view of the specified {@link Team}
+     */
     Field.Map map(Team team);
 
     /**

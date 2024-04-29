@@ -143,15 +143,40 @@ public interface Field {
         }
     }
 
+    /**
+     * A snapshot of the {@link Field} at the moment of initiating the instance of this class<br>
+     * Used to simplify the process of displaying information about the {@link Field}
+     */
     class Map {
+        /**
+         * Width and height of the field
+         */
         private final int width, height;
+
+        /**
+         * {@link Team} which is used as the point of view for the map<br>
+         * {@link Team} can be {@code null}, in which case the map forms without this consideration
+         */
         private final Team team;
+
+        /**
+         * An {@link Iterator} over {@link MapCell} enum representing the state of one singular {@link Cell}
+         */
         private final Iterator<MapCell> mapCells;
 
+        /**
+         * Forms a map with the specified {@link Field}
+         * @param field A reference to a {@link Field} where the game is currently happening
+         */
         public Map(Field field) {
             this(field, null);
         }
 
+        /**
+         * Forms a map with the specified {@link Field} from the point of view of a specified {@link Team}
+         * @param field A reference to a {@link Field} where the game is currently happening
+         * @param team A reference to a {@link Team} which is used as the point of view for the map
+         */
         public Map(Field field, Team team) {
             this.team = team;
             this.width = field.width();
@@ -173,26 +198,46 @@ public interface Field {
             };
         }
 
+        /**
+         * @return Height of the {@link Field}
+         */
         public int getHeight() {
             return height;
         }
 
+        /**
+         * @return Width of the {@link Field}
+         */
         public int getWidth() {
             return width;
         }
 
+        /**
+         * @return {@link Team} which is used as the point of view for the map
+         */
         public Team getTeam() {
             return team;
         }
 
+        /**
+         * @return An {@link Iterator} over {@link MapCell} enum representing the state of one singular {@link Cell}
+         */
         public Iterator<MapCell> getMapCells() {
             return mapCells;
         }
     }
 
+    /**
+     * State of a {@link Cell} used in construction of an instance of the {@link Map}
+     */
     enum MapCell {
         BUILDING_AND_PLAYER, BUILDING, PLAYER, NONE;
 
+        /**
+         * Converts a {@link Cell} to its {@link MapCell} equivalent
+         * @param cell Reference to the {@link Cell} to convert
+         * @return Resulting {@link MapCell}
+         */
         public static MapCell fromCell(Cell cell) {
             if (cell.hasBuilding() && cell.hasPlayer()) return BUILDING_AND_PLAYER;
             if (cell.hasBuilding()) return BUILDING;

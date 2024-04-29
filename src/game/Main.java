@@ -217,6 +217,9 @@ public class Main {
         System.out.println(teamList);
     }
 
+    /**
+     * Prints out the {@link Field.Map} from the point of view of the current {@link Team}
+     */
     private static void map(Game game) {
         if (!game.inProgress()) {
             System.out.println(INVALID_COMMAND);
@@ -227,6 +230,10 @@ public class Main {
         printMap(map);
     }
 
+    /**
+     * Prints out the specified {@link Field.Map}
+     * @param map The instance of {@link Field.Map} to print out
+     */
     private static void printMap(Field.Map map) {
         int width = map.getWidth(), height = map.getHeight();
         System.out.printf("%d %d\n", width, height);
