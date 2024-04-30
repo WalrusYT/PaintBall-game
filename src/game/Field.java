@@ -112,7 +112,8 @@ public interface Field {
 
         /**
          * Check whether this cell contains a {@link Player}
-         * @return {@code true} if the reference to a player is not {@code null}, otherwise {@code false}
+         * @return {@code true} if the reference to a player is not {@code null},
+         * otherwise {@code false}
          */
         public boolean hasPlayer() {
             return player != null;
@@ -128,7 +129,8 @@ public interface Field {
 
         /**
          * Check whether this cell contains a {@link Building}
-         * @return {@code true} if the reference to a building is not {@code null}, otherwise {@code false}
+         * @return {@code true} if the reference to a building is not {@code null},
+         * otherwise {@code false}
          */
         public boolean hasBuilding() {
             return building != null;
@@ -168,7 +170,8 @@ public interface Field {
         private final Team team;
 
         /**
-         * An {@link Iterator} over {@link MapCell} enum representing the state of one singular {@link Cell}
+         * An {@link Iterator} over {@link MapCell} enum representing
+         * the state of one singular {@link Cell}
          */
         private final Iterator<MapCell> mapCells;
 
@@ -181,7 +184,8 @@ public interface Field {
         }
 
         /**
-         * Forms a map with the specified {@link Field} from the point of view of a specified {@link Team}
+         * Forms a map with the specified {@link Field}
+         * from the point of view of a specified {@link Team}
          * @param field A reference to a {@link Field} where the game is currently happening
          * @param team A reference to a {@link Team} which is used as the point of view for the map
          */
@@ -230,8 +234,10 @@ public interface Field {
         }
 
         /**
-         * Returns an {@link Iterator} over {@link MapCell} enum representing the state of one singular {@link Cell}
-         * @return An {@link Iterator} over {@link MapCell} enum representing the state of one singular {@link Cell}
+         * Returns an {@link Iterator} over {@link MapCell} enum
+         * representing the state of one singular {@link Cell}
+         * @return An {@link Iterator} over {@link MapCell} enum
+         * representing the state of one singular {@link Cell}
          */
         public Iterator<MapCell> getMapCells() {
             return mapCells;

@@ -119,11 +119,11 @@ public class PaintballGame implements Game {
         }
         if (building.team() != this.currentTeam()){
             nextTurn();
-            return new GameResponse<>(GameStatus.WRONG_TEAM_BUNKER); // Bunker illegally invaded. + переход к след ходу
+            return new GameResponse<>(GameStatus.WRONG_TEAM_BUNKER);
         }
         CreateStatus status = building.createPlayer(color);
         nextTurn();
-        return new GameResponse<>(status); // created
+        return new GameResponse<>(status);
     }
 
     @Override
@@ -169,7 +169,8 @@ public class PaintballGame implements Game {
     private boolean isGameOver() { return teams.size() == 1; }
 
     /**
-     * Get the first {@link Team} from the teams {@link Array}, which is considered the winner if the size of the array is 1
+     * Get the first {@link Team} from the teams {@link Array},
+     * which is considered the winner if the size of the array is 1
      * @return Reference to the winner team
      */
     private Team winner() {
@@ -224,15 +225,15 @@ public class PaintballGame implements Game {
 
         if (currentTeam().isEmpty()) status = GameStatus.TEAM_ELIMINATED;
         removeEmptyTeams();
-        if (isGameOver()) {
-            Team winner = winner();
-            this.stop();
-            if (status == GameStatus.TEAM_ELIMINATED)
-                return new GameResponse<>(mapAfterAttack, GameStatus.TEAM_ELIM_AND_GAME_OVER, winner);
-            return new GameResponse<>(mapAfterAttack, GameStatus.GAME_OVER, winner);
+        if (!isGameOver()) {
+            nextTurn();
+            return new GameResponse<>(mapAfterAttack, status);
         }
-        nextTurn();
-        return new GameResponse<>(mapAfterAttack, status);
+        Team winner = winner();
+        this.stop();
+        if (status == GameStatus.TEAM_ELIMINATED)
+            return new GameResponse<>(mapAfterAttack, GameStatus.TEAM_ELIM_AND_GAME_OVER, winner);
+        return new GameResponse<>(mapAfterAttack, GameStatus.GAME_OVER, winner);
     }
 
     @Override

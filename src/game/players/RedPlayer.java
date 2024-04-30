@@ -18,7 +18,8 @@ public class RedPlayer extends Player {
         int attackWidth = field.width() - x + 1, attackHeight = field.height() - y + 1;
         for (int i = 1; i < attackWidth * attackHeight; i++) {
             Field.Cell cellToAttack = field.cellAt(x + i % attackWidth, y + i / attackWidth);
-            if (attackCell(cellToAttack) == ActionStatus.PLAYER_ELIMINATED) return ActionStatus.PLAYER_ELIMINATED;
+            if (attackCell(cellToAttack) == ActionStatus.PLAYER_ELIMINATED)
+                return ActionStatus.PLAYER_ELIMINATED;
         }
         return ActionStatus.SURVIVED;
     }

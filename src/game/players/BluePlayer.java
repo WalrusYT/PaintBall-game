@@ -26,7 +26,8 @@ public class BluePlayer extends Player {
                 if (i % 2 != 0) { offset = -offset; }
                 cellToAttack = field.cellAt(x + offset, y);
             }
-            if (attackCell(cellToAttack) == ActionStatus.PLAYER_ELIMINATED) return ActionStatus.PLAYER_ELIMINATED;
+            if (attackCell(cellToAttack) == ActionStatus.PLAYER_ELIMINATED)
+                return ActionStatus.PLAYER_ELIMINATED;
         }
         return ActionStatus.SURVIVED;
     }

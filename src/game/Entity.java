@@ -1,7 +1,8 @@
 package game;
 
 /**
- * Base entity for the game with a certain location on the {@link Field} and belonging to some {@link Team}
+ * Base entity for the game with a certain location on the {@link Field}
+ * and belonging to some {@link Team}
  */
 public interface Entity {
 

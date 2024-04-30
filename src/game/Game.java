@@ -27,7 +27,8 @@ public interface Game {
      * Initializes a new {@link Field} for this game with the specified width and height
      * @param width The width of the new field
      * @param height The height of the new field
-     * @return {@link GameStatus#INVALID_SIZE} if either the width or the height are less than 10<br>
+     * @return {@link GameStatus#INVALID_SIZE} if either the width or the height
+     * are less than 10<br>
      * {@link GameStatus#OK} if the field was successfully initialized
      */
     GameStatus setField(int width, int height);
@@ -73,9 +74,12 @@ public interface Game {
      * @param bunkerName name of the bunker, where the player will be created
      * @return {@link GameResponse} with a status:<br>
      * {@link GameStatus#INVALID_PLAYER_COLOR} if the color is {@code null}<br>
-     * {@link GameStatus#INVALID_BUNKER_NAME} if the building with the specified name doesn't exist<br>
-     * {@link GameStatus#WRONG_TEAM_BUNKER} if a team tries to create player in a building they don't own<br>
-     * Otherwise, returns {@link GameStatus#OK} with the {@link CreateStatus} from the {@link Building#createPlayer(PlayerColor)} method
+     * {@link GameStatus#INVALID_BUNKER_NAME} if the building with
+     * the specified name doesn't exist<br>
+     * {@link GameStatus#WRONG_TEAM_BUNKER} if a team tries to create player
+     * in a building they don't own<br>
+     * Otherwise, returns {@link GameStatus#OK} with the {@link CreateStatus}
+     * from the {@link Building#createPlayer(PlayerColor)} method
      */
     GameResponse<CreateStatus> createPlayer(PlayerColor color, String bunkerName);
 
@@ -90,9 +94,11 @@ public interface Game {
      * {@link GameStatus#INVALID_POSITION} if the specified coordinates are out of bounds<br>
      * {@link GameStatus#NO_PLAYER} if there is no player at the specified location<br>
      * {@link GameStatus#PLAYER_NOT_FROM_TEAM} if a team tries to move a player they don't own<br>
-     * Otherwise, returns {@link GameStatus#OK} with the result of the move operation, which is an {@link Iterator}
+     * Otherwise, returns {@link GameStatus#OK} with the result of the move operation,
+     * which is an {@link Iterator}
      * over all the states ({@link Action}) the player was in after moving in one direction<br>
-     * May also return {@link GameStatus#GAME_OVER}, indicating that the game has ended during this method's execution
+     * May also return {@link GameStatus#GAME_OVER}, indicating that the game has ended
+     * during this method's execution
      */
     GameResponse<Iterator<Action>> movePlayerAt(int x, int y, Array<Direction> directions);
 
@@ -102,11 +108,13 @@ public interface Game {
      * Players may also eliminate themselves if they lose the fight<br>
      * @return {@link GameResponse} with a status:<br>
      * {@link GameStatus#GAME_OVER} if the game has ended during this method's execution<br>
-     * {@link GameStatus#TEAM_ELIMINATED} if the attacker's team has been eliminated during this method's execution<br>
-     * {@link GameStatus#TEAM_ELIM_AND_GAME_OVER} if both conditions mentioned above are met at the same time<br>
+     * {@link GameStatus#TEAM_ELIMINATED} if the attacker's team has been eliminated
+     * during this method's execution<br>
+     * {@link GameStatus#TEAM_ELIM_AND_GAME_OVER} if both conditions mentioned above
+     * are met at the same time<br>
      * Otherwise, returns {@link GameStatus#OK} if none of the above happened<br>
-     * The result {@link Team} of {@link GameResponse} is redundant, since it contains the winner team,
-     * which is also stored in the dedicated winner field of game response
+     * The result of the {@link GameResponse} will contain an instance of {@link Field.Map}
+     * right after the attack had happened
      */
     GameResponse<Field.Map> playersAttack();
 
@@ -137,7 +145,8 @@ public interface Game {
 
     /**
      * Starts the game if certain conditions are met (2 or more teams must exist)<br>
-     * @return {@link GameStatus#NOT_ENOUGH_TEAMS} if the game fails to start due to there being less than 2 teams<br>
+     * @return {@link GameStatus#NOT_ENOUGH_TEAMS} if the game fails to start
+     * due to there being less than 2 teams<br>
      * {@link GameStatus#OK} if the conditions are met and the game has started successfully
      */
     GameStatus start();
@@ -164,7 +173,8 @@ public interface Game {
         private final GameStatus status;
         /**
          * Contains a reference to the winning {@link Team} in case the game has ended
-         * (Usually indicated by {@link GameStatus#GAME_OVER} or {@link GameStatus#TEAM_ELIM_AND_GAME_OVER} statuses)
+         * (Usually indicated by {@link GameStatus#GAME_OVER}
+         * or {@link GameStatus#TEAM_ELIM_AND_GAME_OVER} statuses)
          */
         private final Team winner;
 
@@ -182,7 +192,8 @@ public interface Game {
         }
 
         /**
-         * Initializes a successful response with a custom success status other than {@link GameStatus#OK}
+         * Initializes a successful response with a custom success status
+         * other than {@link GameStatus#OK}
          * and some result
          * @param result The result of the logic execution
          * @param status The status of the logic execution
@@ -192,7 +203,8 @@ public interface Game {
         }
 
         /**
-         * Creates a new game response with the specified result and a default success status {@link GameStatus#OK},
+         * Creates a new game response with the specified result
+         * and a default success status {@link GameStatus#OK},
          * mostly used when initializing a response when the logic has successfully executed
          * @param result The result of the logic execution
          */
@@ -238,7 +250,8 @@ public interface Game {
      * All possible statuses of the game logic execution
      */
     enum GameStatus {
-        OK, TEAM_ELIMINATED, TEAM_ELIM_AND_GAME_OVER, GAME_OVER, INVALID_POSITION, NO_PLAYER, PLAYER_NOT_FROM_TEAM, INVALID_SIZE,
-        INVALID_PLAYER_COLOR, INVALID_BUNKER_NAME, WRONG_TEAM_BUNKER, BUNKER_NOT_CREATED, TEAM_NOT_CREATED, NOT_ENOUGH_TEAMS
+        OK, TEAM_ELIMINATED, TEAM_ELIM_AND_GAME_OVER, GAME_OVER, INVALID_POSITION, NO_PLAYER,
+        PLAYER_NOT_FROM_TEAM, INVALID_SIZE, INVALID_PLAYER_COLOR, INVALID_BUNKER_NAME,
+        WRONG_TEAM_BUNKER, BUNKER_NOT_CREATED, TEAM_NOT_CREATED, NOT_ENOUGH_TEAMS
     }
 }

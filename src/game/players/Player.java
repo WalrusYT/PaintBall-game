@@ -23,12 +23,14 @@ public abstract class Player implements Entity {
     protected Field.Cell fieldLocation;
 
     /**
-     * Empty constructor, the initialization is handled by {@link Building#createPlayer(PlayerColor)} method
+     * Empty constructor, the initialization is handled by
+     * {@link Building#createPlayer(PlayerColor)} method
      */
     public Player() {}
 
     /**
-     * Performs an attack on the field, eliminating players and seizing buildings from other teams<br>
+     * Performs an attack on the field, eliminating players
+     * and seizing buildings from other teams<br>
      * Eliminated players may be removed from their respective teams and fields<br>
      * The attacker may eliminate themselves if they lose the fight
      * @return status of the attack
@@ -51,7 +53,8 @@ public abstract class Player implements Entity {
     public abstract PlayerColor color();
 
     /**
-     * Gets the cost of the player (used in {@link Building#createPlayer(PlayerColor)} to create a player)
+     * Gets the cost of the player
+     * (used in {@link Building#createPlayer(PlayerColor)} to create a player)
      * @return Player's cost
      */
     public abstract int cost();
@@ -69,6 +72,7 @@ public abstract class Player implements Entity {
             case SOUTH -> moveY = 1;
             case EAST -> moveX = 1;
             case WEST -> moveX = -1;
+            default -> {}
         }
         int newX = fieldLocation.getX() + moveX, newY = fieldLocation.getY() + moveY;
         if (newX <= 0 || newX > field.width() || newY <= 0 || newY > field.height())
@@ -84,8 +88,10 @@ public abstract class Player implements Entity {
      * @return {@link Action} with a status:<br>
      * {@link ActionStatus#INVALID_DIRECTION} if the direction is {@link Direction#INVALID}<br>
      * {@link ActionStatus#OFF_THE_MAP} if the next location is off the map<br>
-     * {@link ActionStatus#POSITION_OCCUPIED} if the next location is occupied by a player from the same team<br>
-     * Otherwise, the {@link Action} will consist of the player's updated {@link Field.Cell} location
+     * {@link ActionStatus#POSITION_OCCUPIED} if the next location is occupied
+     * by a player from the same team<br>
+     * Otherwise, the {@link Action} will consist
+     * of the player's updated {@link Field.Cell} location
      * and a status from the {@link #attackCell(Field.Cell)} method
      */
     protected Action moveDefault(Direction dir) {
@@ -138,7 +144,8 @@ public abstract class Player implements Entity {
      * {@link ActionStatus#PLAYER_ELIMINATED} if the attacker was eliminated during the attack<br>
      * {@link ActionStatus#WON_FIGHT} if the attacker eliminated the other player<br>
      * {@link ActionStatus#BUNKER_SEIZED} if the attacker seized the building<br>
-     * {@link ActionStatus#WON_AND_SEIZED} if the attacker eliminated the other player and seized the building<br>
+     * {@link ActionStatus#WON_AND_SEIZED} if the attacker eliminated
+     * the other player and seized the building<br>
      */
     public ActionStatus attackCell(Field.Cell cell) {
         Player defender = cell.getPlayer();
@@ -156,12 +163,12 @@ public abstract class Player implements Entity {
                 status = ActionStatus.WON_FIGHT;
             }
         }
-
         Building building = cell.getBuilding();
         if (building != null && building.team() != this.team()) {
             if (building.team() != null) building.team().removeBuilding(building);
             this.team().addBuilding(building);
-            status = status == ActionStatus.WON_FIGHT ? ActionStatus.WON_AND_SEIZED : ActionStatus.BUNKER_SEIZED;
+            status = status == ActionStatus.WON_FIGHT ?
+                ActionStatus.WON_AND_SEIZED : ActionStatus.BUNKER_SEIZED;
         }
         return status;
     }
@@ -222,7 +229,8 @@ public abstract class Player implements Entity {
     /**
      * Represents the state of the player during a {@link Player#move(Array)} in one direction
      * or during an {@link Player#attack()} on a cell
-     * Contains reference to the player, its location and the status {@link ActionStatus} after the action
+     * Contains reference to the player, its location
+     * and the status {@link ActionStatus} after the action
      */
     public class Action {
         private final Field.Cell location;

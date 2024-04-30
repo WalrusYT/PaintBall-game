@@ -17,7 +17,8 @@ public interface Building extends Entity {
      * @param color {@link Player.PlayerColor} of the player to create
      * @return {@link CreateStatus} indicating the status of player creation<br>
      * {@link CreateStatus#OK} if the player was successfully created
-     * {@link CreateStatus#NOT_ENOUGH_MONEY} if there isn't enough money to afford creating a new player
+     * {@link CreateStatus#NOT_ENOUGH_MONEY} if there isn't enough money
+     * to afford creating a new player
      * {@link CreateStatus#OCCUPIED} if the building is already occupied by another player
      */
     CreateStatus createPlayer(Player.PlayerColor color);

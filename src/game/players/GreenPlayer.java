@@ -16,13 +16,12 @@ public class GreenPlayer extends Player {
     public ActionStatus attack() {
         int x = fieldLocation.getX(), y = fieldLocation().getY();
         int[] diagLengths = new int[]{
-                Math.min(x - 1, y - 1), Math.min(field.width() - x, y - 1),
-                Math.min(x - 1, field.height() - y), Math.min(field.width() - x, field.height() - y)
+            Math.min(x - 1, y - 1), Math.min(field.width() - x, y - 1),
+            Math.min(x - 1, field.height() - y), Math.min(field.width() - x, field.height() - y)
         };
         final int[] diagVisitedCells = new int[]{ 0, 0, 0, 0 };
         int cells = 0;
         for (int i = 0; i < diagLengths.length; i++) cells += diagLengths[i];
-
         for (int i = 0; i < cells; i++) {
             for (int j = 0; j < 4; j++) {
                 int dir = (i + j) % 4;
@@ -32,7 +31,8 @@ public class GreenPlayer extends Player {
                 if (dir % 2 == 0) offsetX = -offsetX;
                 if (dir / 2 == 0) offsetY = -offsetY;
                 Field.Cell cellToAttack = field.cellAt(x + offsetX, y + offsetY);
-                if (attackCell(cellToAttack) == ActionStatus.PLAYER_ELIMINATED) return ActionStatus.PLAYER_ELIMINATED;
+                if (attackCell(cellToAttack) == ActionStatus.PLAYER_ELIMINATED)
+                    return ActionStatus.PLAYER_ELIMINATED;
             }
         }
         return ActionStatus.SURVIVED;
