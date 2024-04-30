@@ -60,7 +60,8 @@ public class Main {
     }
 
     /**
-     * Stops the game and quits the game
+     * Stops the game
+     * The program should end after this is called
      */
     private static void quit(Game game) {
         System.out.println(Feedback.GO_QUIT);
@@ -341,6 +342,9 @@ public class Main {
         }
     }
 
+    /**
+     * Commands which allow users to interact with this program and the game
+     */
     public static class Commands {
         public static final String
         START_GAME = "game", MOVE = "move", CREATE = "create",
