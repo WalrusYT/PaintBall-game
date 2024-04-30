@@ -32,6 +32,11 @@ public class Main {
         in.close();
     }
 
+    /**
+     * Method that maps commands to their respective method call and executes them
+     * @param in Scanner object to read user input
+     * @param command Input {@link String} of a user
+     */
     public static void handleCommand(Game game, Scanner in, String command) {
         switch (command) {
             case Commands.HELP -> help(game);
@@ -292,6 +297,11 @@ public class Main {
         }
     }
 
+    /**
+     * Prints out the information about some {@link Player}'s movements
+     * @param moves List of moves in the form of an {@link Iterator} over {@link Action},
+     * which is usually returned by the {@link Game#movePlayerAt(int, int, Array)} method
+     */
     private static void printMoves(Iterator<Action> moves) {
         while (moves.hasNext()) {
             Action move = moves.next();
