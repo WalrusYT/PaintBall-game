@@ -102,7 +102,7 @@ public class Main {
                 System.out.print(prefix + "> ");
             }
             String[] input = in.nextLine().split(" ", 2);
-            comm = input[0];
+            comm = input[0].toLowerCase();
             commandArgs = input.length > 1 ? input[1] : "" ;
             if (comm.isEmpty()) { isInputEmpty = true; continue; }
             isInputEmpty = false;
